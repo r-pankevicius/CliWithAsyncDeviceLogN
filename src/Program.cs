@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Timers;
+
 namespace CliWithAsyncDeviceLogN
 {
     internal static class Program
@@ -11,7 +16,9 @@ namespace CliWithAsyncDeviceLogN
             Console.WriteLine("Use commands exit or quit to quit the program.");
             WriteCurrentCommandLine();
 
-            using var _ = new Timer(OnTimerCallback, 1, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+            Timer timer = new(1000);
+            timer.Elapsed += async (sender, e) => await OnTimerCallback();
+            timer.Start();
 
             bool shouldExit = false;
 
@@ -60,7 +67,7 @@ namespace CliWithAsyncDeviceLogN
                 "quit".Equals(line, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static void OnTimerCallback(object? state)
+        public static Task OnTimerCallback()
         {
             ClearCommandLine();
             var foregroundColor = Console.ForegroundColor;
@@ -68,6 +75,7 @@ namespace CliWithAsyncDeviceLogN
             Console.WriteLine("OnTimerCallback");
             Console.ForegroundColor = foregroundColor;
             WriteCurrentCommandLine();
+            return Task.CompletedTask;
         }
     }
 }
