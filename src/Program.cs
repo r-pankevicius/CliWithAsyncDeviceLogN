@@ -42,6 +42,11 @@ namespace CliWithAsyncDeviceLogN
             Console.Write(commandLine);
         }
 
+        /// <summary>
+        /// Clears all input line with "carriage return".
+        /// </summary>
+        private static void ClearCommandLine() => Console.Write("\r");
+
         private static string GetCurrentCommandLine() => string.Concat(CommandPromptPrefix, LineBufferToString());
 
         private static string LineBufferToString() => string.Join("", CommandLineBuffer);
@@ -57,13 +62,12 @@ namespace CliWithAsyncDeviceLogN
 
         public static void OnTimerCallback(object? state)
         {
-            Console.Write("\r"); // clear all input line with "carriage return"
+            ClearCommandLine();
             var foregroundColor = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("OnTimerCallback");
             Console.ForegroundColor = foregroundColor;
-            Console.Write("\r");
-            Console.Write(LineBufferToString());
+            WriteCurrentCommandLine();
         }
     }
 }
