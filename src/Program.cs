@@ -2,10 +2,15 @@ namespace CliWithAsyncDeviceLogN
 {
     internal static class Program
     {
-        private static readonly List<char> LineBuffer = new();
+        private const string CommandPromptPrefix = "$ ";
+
+        private static readonly List<char> CommandLineBuffer = new();
 
         public static void Main()
         {
+            Console.WriteLine("Use commands exit or quit to quit the program.");
+            WriteCurrentCommandLine();
+
             using var _ = new Timer(OnTimerCallback, 1, TimeSpan.Zero, TimeSpan.FromSeconds(1));
 
             bool shouldExit = false;
@@ -18,24 +23,32 @@ namespace CliWithAsyncDeviceLogN
                     if (consoleKey.Key == ConsoleKey.Enter)
                     {
                         string line = LineBufferToString();
-                        LineBuffer.Clear();
-                        Console.WriteLine(line);
+                        CommandLineBuffer.Clear();
                         ExecuteCommand(line, out shouldExit);
                     }
                     else if (consoleKey.KeyChar != 0)
                     {
-                        LineBuffer.Add(consoleKey.KeyChar);
-                        Console.Write("\r");
-                        Console.Write(LineBufferToString());
+                        CommandLineBuffer.Add(consoleKey.KeyChar);
+                        WriteCurrentCommandLine();
                     }
                 }
             }
         }
 
-        private static string LineBufferToString() => string.Join("", LineBuffer);
+        private static void WriteCurrentCommandLine()
+        {
+            string commandLine = GetCurrentCommandLine();
+            Console.Write("\r");
+            Console.Write(commandLine);
+        }
+
+        private static string GetCurrentCommandLine() => string.Concat(CommandPromptPrefix, LineBufferToString());
+
+        private static string LineBufferToString() => string.Join("", CommandLineBuffer);
 
         private static void ExecuteCommand(string line, out bool shouldExit)
         {
+            Console.WriteLine();
             Console.WriteLine("...Executing command {0}", line);
             shouldExit =
                 "exit".Equals(line, StringComparison.OrdinalIgnoreCase) ||
