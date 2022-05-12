@@ -33,6 +33,14 @@ namespace CliWithAsyncDeviceLogN
                         CommandLineBuffer.Clear();
                         ExecuteCommand(line, out shouldExit);
                     }
+                    else if (consoleKey.Key == ConsoleKey.Backspace)
+                    {
+                        if (CommandLineBuffer.Count > 0)
+                        {
+                            CommandLineBuffer.RemoveAt(CommandLineBuffer.Count - 1);
+                            WriteCurrentCommandLine();
+                        }
+                    }
                     else if (consoleKey.KeyChar != 0)
                     {
                         CommandLineBuffer.Add(consoleKey.KeyChar);
@@ -44,17 +52,32 @@ namespace CliWithAsyncDeviceLogN
 
         private static void WriteCurrentCommandLine()
         {
+            ClearCommandLine();
             string commandLine = GetCurrentCommandLine();
-            Console.Write("\r");
             Console.Write(commandLine);
         }
 
         /// <summary>
         /// Clears all input line with "carriage return".
         /// </summary>
-        private static void ClearCommandLine() => Console.Write("\r");
+        private static void ClearCommandLine()
+        {
+            string previousCommandLine = GetPreviousCommandLine();
+            Console.Write($"\r{new string(' ', previousCommandLine.Length)}\r");
+        }
 
-        private static string GetCurrentCommandLine() => string.Concat(CommandPromptPrefix, LineBufferToString());
+        private static string GetCurrentCommandLine() =>
+            string.Concat(CommandPromptPrefix, LineBufferToString());
+
+        /// <summary>
+        /// Fake implementation to support proper cleanup.
+        /// For the real implementation a command history (aka command stack) is needed.
+        /// </summary>
+        /// <returns>Fake long string</returns>
+        private static string GetPreviousCommandLine()
+        {
+            return new string(' ', 80);
+        }
 
         private static string LineBufferToString() => string.Join("", CommandLineBuffer);
 
