@@ -37,6 +37,8 @@ namespace CliWithAsyncDeviceLogN
                     {
                         if (CommandLineBuffer.Count > 0)
                         {
+                            // clear to remove last command line char (CommandLineBuffer will be truncated by 1 char)
+                            ClearCommandLine();
                             CommandLineBuffer.RemoveAt(CommandLineBuffer.Count - 1);
                             WriteCurrentCommandLine();
                         }
@@ -62,22 +64,12 @@ namespace CliWithAsyncDeviceLogN
         /// </summary>
         private static void ClearCommandLine()
         {
-            string previousCommandLine = GetPreviousCommandLine();
-            Console.Write($"\r{new string(' ', previousCommandLine.Length)}\r");
+            // Don't leave mess, clear current command line with spaces
+            Console.Write($"\r{new string(' ', GetCurrentCommandLine().Length)}\r");
         }
 
         private static string GetCurrentCommandLine() =>
             string.Concat(CommandPromptPrefix, LineBufferToString());
-
-        /// <summary>
-        /// Fake implementation to support proper cleanup.
-        /// For the real implementation a command history (aka command stack) is needed.
-        /// </summary>
-        /// <returns>Fake long string</returns>
-        private static string GetPreviousCommandLine()
-        {
-            return new string(' ', 80);
-        }
 
         private static string LineBufferToString() => string.Join("", CommandLineBuffer);
 
