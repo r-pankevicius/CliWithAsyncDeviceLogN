@@ -41,13 +41,12 @@ namespace CliWithAsyncDeviceLogNTests
 
             buffer.Add("dir");
             buffer.Previous().Should().Be("dir");
-            buffer.Next().Should().Be("dir");
+            buffer.Next().Should().Be("");
 
             // Adding "cd" shall forget "dir"
             buffer.Add("cd");
             buffer.Previous().Should().Be("cd");
             buffer.Previous().Should().Be("");
-            buffer.Next().Should().Be("cd");
             buffer.Next().Should().Be("");
         }
 
@@ -63,7 +62,6 @@ namespace CliWithAsyncDeviceLogNTests
             buffer.Previous().Should().Be("2"); // Arrow up
             buffer.Previous().Should().Be("1"); // Arrow up
             buffer.Previous().Should().Be(""); // Arrow up
-            buffer.Next().Should().Be("1");// Arrow down
             buffer.Next().Should().Be("2");// Arrow down
             buffer.Next().Should().Be(""); // Arrow down
         }

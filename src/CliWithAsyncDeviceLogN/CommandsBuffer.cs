@@ -24,6 +24,10 @@ namespace CliWithAsyncDeviceLogN
         public int Count => _buffer.Count;
         public int Index => _currentIndex;
 
+        /// <summary>
+        /// Adds <paramref name="command"/> to the buffer.
+        /// (command ENTER)
+        /// </summary>
         public void Add(string command)
         {
             if (string.IsNullOrEmpty(command))
@@ -39,19 +43,31 @@ namespace CliWithAsyncDeviceLogN
             _currentIndex = _buffer.Count - 1;
         }
 
+        /// <summary>
+        /// Gets previous command from the buffer or empty string if there is nothing there.
+        /// (UP ARROW)
+        /// </summary>
         public string Previous()
         {
-            if (_currentIndex < 0 || _currentIndex >= _buffer.Count)
+            int previousIndex = _currentIndex;
+            if (previousIndex < 0 || previousIndex >= _buffer.Count)
                 return string.Empty;
 
-            string result = _buffer[_currentIndex];
-            _currentIndex--;
+            string result = _buffer[previousIndex];
+            _currentIndex = previousIndex - 1;
             return result;
         }
 
+        /// <summary>
+        /// Gets next command from the buffer or empty string if there is nothing there.
+        /// (DOWN ARROW)
+        /// </summary>
         public string Next()
         {
             int nextIndex = _currentIndex + 1;
+            if (nextIndex == 0)
+                nextIndex++;
+
             if (nextIndex < 0 || nextIndex >= _buffer.Count)
                 return string.Empty;
 
