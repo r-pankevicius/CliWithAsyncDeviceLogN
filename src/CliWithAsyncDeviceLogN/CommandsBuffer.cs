@@ -24,7 +24,7 @@ namespace CliWithAsyncDeviceLogN
             if (string.IsNullOrEmpty(command))
                 return;
 
-            if (_buffer.Count > 0 && _buffer[_buffer.Count - 1] == command)
+            if (_buffer.Count > 0 && _buffer[^1] == command)
                 return;
 
             if (_buffer.Count == _maxSize)
