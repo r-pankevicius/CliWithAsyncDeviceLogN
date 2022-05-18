@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace CliWithAsyncDeviceLogN
 {
     /// <summary>
     /// A.K.A. "Command history".
     /// </summary>
+    [DebuggerDisplay("CommandsBuffer. Count: {Count}, Index: {Index}")]
     internal class CommandsBuffer
     {
         private readonly List<string> _buffer;
@@ -18,6 +20,9 @@ namespace CliWithAsyncDeviceLogN
             _buffer = new();
             _currentIndex = -1;
         }
+
+        public int Count => _buffer.Count;
+        public int Index => _currentIndex;
 
         public void Add(string command)
         {
@@ -46,11 +51,12 @@ namespace CliWithAsyncDeviceLogN
 
         public string Next()
         {
-            if (_currentIndex < 0 || _currentIndex + 1 >= _buffer.Count)
+            int nextIndex = _currentIndex + 1;
+            if (nextIndex < 0 || nextIndex >= _buffer.Count)
                 return string.Empty;
 
-            string result = _buffer[_currentIndex + 1];
-            _currentIndex++;
+            string result = _buffer[nextIndex];
+            _currentIndex = nextIndex;
             return result;
         }
     }
