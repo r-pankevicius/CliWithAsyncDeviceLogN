@@ -33,6 +33,9 @@ namespace CliWithAsyncDeviceLogN
 
         public string Previous()
         {
+            if (_currentIndex < 0 || _currentIndex >= _buffer.Count)
+                return string.Empty;
+
             string result = _buffer[_currentIndex];
             _currentIndex--;
             return result;
@@ -40,7 +43,10 @@ namespace CliWithAsyncDeviceLogN
 
         public string Next()
         {
-            string result = _buffer[_currentIndex];
+            if (_currentIndex < 0 || _currentIndex + 1 >= _buffer.Count)
+                return string.Empty;
+
+            string result = _buffer[_currentIndex + 1];
             _currentIndex++;
             return result;
         }
