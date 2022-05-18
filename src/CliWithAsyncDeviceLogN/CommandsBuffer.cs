@@ -27,6 +27,9 @@ namespace CliWithAsyncDeviceLogN
             if (_buffer.Count > 0 && _buffer[_buffer.Count - 1] == command)
                 return;
 
+            if (_buffer.Count == _maxSize)
+                _buffer.RemoveAt(0);
+
             _buffer.Add(command);
             _currentIndex = _buffer.Count - 1;
         }
