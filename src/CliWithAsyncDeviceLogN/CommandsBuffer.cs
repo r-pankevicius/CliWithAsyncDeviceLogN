@@ -34,7 +34,12 @@ namespace CliWithAsyncDeviceLogN
                 return;
 
             if (_buffer.Count > 0 && _buffer[^1] == command)
+            {
+                // Repeating last command shall reset history pointer so the same command
+                // appears on "arrow up"
+                _currentIndex = _buffer.Count - 1;
                 return;
+            }
 
             if (_buffer.Count == _maxSize)
                 _buffer.RemoveAt(0);

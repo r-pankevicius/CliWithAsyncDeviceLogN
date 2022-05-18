@@ -80,5 +80,17 @@ namespace CliWithAsyncDeviceLogNTests
             buffer.Add("Same");
             buffer.Count.Should().Be(2);
         }
+
+        [Fact]
+        public void ArrowUpReturnsLastCommand_ForRepeatingCommand()
+        {
+            CommandsBuffer buffer = new(maxSize: 10);
+
+            buffer.Add("1"); // 1 <ENTER>
+            buffer.Add("2"); // 2 <ENTER>
+            buffer.Previous().Should().Be("2"); // Arrow up
+            buffer.Add("2"); // 2 <ENTER>
+            buffer.Previous().Should().Be("2"); // Arrow up
+        }
     }
 }
