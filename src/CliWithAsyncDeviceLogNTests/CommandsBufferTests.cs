@@ -35,7 +35,7 @@ namespace CliWithAsyncDeviceLogNTests
         }
 
         [Fact]
-        public void CommandBuffer_OfMaxSize1_ShouldKeepOnly1ItemInHistory()
+        public void WhenMaxSize1_ShouldKeepOnly1ItemInHistory()
         {
             CommandsBuffer buffer = new(maxSize: 1);
 
@@ -51,7 +51,7 @@ namespace CliWithAsyncDeviceLogNTests
         }
 
         [Fact]
-        public void CommandBuffer_ArrowUpDownScenarios()
+        public void ArrowUpDownScenarios()
         {
             CommandsBuffer buffer = new(maxSize: 10);
 
@@ -64,6 +64,21 @@ namespace CliWithAsyncDeviceLogNTests
             buffer.Previous().Should().Be(""); // Arrow up
             buffer.Next().Should().Be("2");// Arrow down
             buffer.Next().Should().Be(""); // Arrow down
+        }
+
+        [Fact]
+        public void Add_WhenCommandIsSameAsLast_ShouldNotAddRepeatingCommand()
+        {
+            CommandsBuffer buffer = new(maxSize: 10);
+
+            buffer.Add("1");
+            buffer.Count.Should().Be(1);
+            buffer.Add("Same");
+            buffer.Count.Should().Be(2);
+            buffer.Add("Same");
+            buffer.Count.Should().Be(2);
+            buffer.Add("Same");
+            buffer.Count.Should().Be(2);
         }
     }
 }
